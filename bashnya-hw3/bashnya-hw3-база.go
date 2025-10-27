@@ -10,21 +10,21 @@ func (s *Stack) Push(elem int) {
 	s.arr = append(s.arr, elem)
 }
 
-func (s *Stack) Pop() int {
+func (s *Stack) Pop() *int {
 	if s.IsEmpty() {
-		return 0
+		return nil
 	}
 	index := len(s.arr) - 1
 	elem := s.arr[index]
 	s.arr = s.arr[:index]
-	return elem
+	return &elem
 }
 
-func (s *Stack) Peek() int {
+func (s *Stack) Peek() *int {
 	if s.IsEmpty() {
-		return 0
+		return nil
 	}
-	return s.arr[len(s.arr)-1]
+	return &s.arr[len(s.arr)-1]
 }
 
 func (s *Stack) IsEmpty() bool {
@@ -49,27 +49,51 @@ func main() {
 	fmt.Println("Пустой ли стек?", st.IsEmpty())
 	fmt.Println("Размер стека:", st.Size())
 	fmt.Println("Содержимое стека:", st.arr)
-	fmt.Println("Верхний элмент стека (без удаления):", st.Peek())
+	if peek := st.Peek(); peek != nil {
+		fmt.Println("Верхний элемент стека (без удаления):", *peek)
+	} else {
+		fmt.Println("Верхний элемент стека (без удаления): <nil>")
+	}
 	fmt.Println("Добавляем элемент 10")
 	st.Push(10)
-	fmt.Println("Верхний элемент стека (без удаления):", st.Peek())
+	if peek := st.Peek(); peek != nil {
+		fmt.Println("Верхний элемент стека (без удаления):", *peek)
+	} else {
+		fmt.Println("Верхний элемент стека (без удаления): <nil>")
+	}
 	fmt.Println("Добавляем элементы 11, 12, 13")
 	st.Push(11)
 	st.Push(12)
 	st.Push(13)
-	fmt.Println("Верхний элемент стека (без удаления):", st.Peek())
+	if peek := st.Peek(); peek != nil {
+		fmt.Println("Верхний элемент стека (без удаления):", *peek)
+	} else {
+		fmt.Println("Верхний элемент стека (без удаления): <nil>")
+	}
 	fmt.Println("Содержимое стека:", st.arr)
 	fmt.Println("Пустой ли стек?", st.IsEmpty())
 	fmt.Println("Извлекаем элемент из стека")
-	fmt.Println("Результат Pop():", st.Pop())
+	if pop := st.Pop(); pop != nil {
+		fmt.Println("Результат Pop():", *pop)
+	} else {
+		fmt.Println("Результат Pop(): <nil>")
+	}
 	fmt.Println("Размер стека после Pop():", st.Size())
 	fmt.Println("Содержимое стека после Pop():", st.arr)
 	fmt.Println("Добавляем элемент 14")
 	st.Push(14)
-	fmt.Println("Верхний элемент стека (без удаления):", st.Peek())
+	if peek := st.Peek(); peek != nil {
+		fmt.Println("Верхний элемент стека (без удаления):", *peek)
+	} else {
+		fmt.Println("Верхний элемент стека (без удаления): <nil>")
+	}
 	fmt.Println("Размер стека после Push(14):", st.Size())
 	fmt.Println("Еще раз извлекаем элемент")
-	fmt.Println("Результат Pop():", st.Pop())
+	if pop := st.Pop(); pop != nil {
+		fmt.Println("Результат Pop():", *pop)
+	} else {
+		fmt.Println("Результат Pop(): <nil>")
+	}
 	fmt.Println("Содержимое стека:", st.arr)
 	st.Clear()
 	fmt.Println("Размер стека после очистки:", st.Size())
