@@ -28,5 +28,8 @@ jobs:
     - name: Unit tests
       run: go test -v ./...
 
+    - name: Grant permission to execute the script
+      run: chmod +x ./acceptance-tests/tests.sh
+
     - name: Acceptance tests
       run: ./acceptance-tests/tests.sh 
