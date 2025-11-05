@@ -39,39 +39,50 @@ func parseFlags() UniqConfig {
 	return uq
 }
 
-func main() {
-	uq := parseFlags()
+func validate(uq UniqConfig) {
 	if (uq.count && uq.duplicate) || (uq.count && uq.unique) || (uq.unique && uq.duplicate) || (len(os.Args) > 6) {
 		fmt.Fprintf(os.Stderr, "Ошибка! Утилита имеет вид: uniq [-c | -d | -u] [-i] [-f num] [-s chars] [input_file [output_file]]")
 		os.Exit(1)
 	}
+}
 
+func openInputFile(filename string) *os.File {
 	var input *os.File
-	if uq.inputFile != "" {
-		var err error
-		input, err = os.Open(uq.inputFile)
+	var err error
+	if filename != "" {
+		input, err = os.Open(filename)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Возникла ошибка при открытии файла!")
 			os.Exit(1)
 		}
-		defer input.Close()
 	} else {
 		input = os.Stdin
 	}
+	return input
+}
 
+func createOutputFile(filename string) *os.File {
 	var output *os.File
-	if uq.outputFile != "" {
-		var err error
-		output, err = os.Create(uq.outputFile)
+	var err error
+	if filename != "" {
+		output, err = os.Create(filename)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Возникла ошибка при создании файла!")
 			os.Exit(1)
 		}
-		defer output.Close()
 	} else {
 		output = os.Stdout
 	}
+	return output
+}
 
+func main() {
+	uq := parseFlags()
+	validate(uq)
+	input := openInputFile(uq.inputFile)
+	defer input.Close()
+	output := createOutputFile(uq.outputFile)
+	defer output.Close()
 	lines, err := uniq.ReadLines(input)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Ошибка чтения: %v", err)
@@ -85,13 +96,11 @@ func main() {
 		NumFields:      uq.numFields,
 		NumChars:       uq.numChars,
 	}
-
 	result, err := uniq.ProcessLines(lines, opts)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Ошибка обработки: %v", err)
 		os.Exit(1)
 	}
-
 	if err := uniq.WriteLines(output, result); err != nil {
 		fmt.Fprintf(os.Stderr, "Ошибка записи: %v", err)
 		os.Exit(1)
