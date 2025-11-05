@@ -22,7 +22,6 @@ func ProcessLines(str []string, opts Options) ([]string, error) {
 	}
 
 	res := make([]string, 0)
-	counts := make([]int, 0)
 	processed := make([]string, len(str))
 	for i, line := range str {
 		processed[i] = processLine(line, opts)
@@ -35,8 +34,6 @@ func ProcessLines(str []string, opts Options) ([]string, error) {
 			c++
 			j++
 		}
-
-		counts = append(counts, c)
 		line := str[i]
 		switch {
 		case opts.Count:
@@ -52,7 +49,6 @@ func ProcessLines(str []string, opts Options) ([]string, error) {
 		default:
 			res = append(res, line)
 		}
-
 		i = j
 	}
 	if res == nil {
